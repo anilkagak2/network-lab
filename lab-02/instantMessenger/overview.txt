@@ -1,0 +1,28 @@
+Client
+Input	user_name, host[on which server is running],
+	port[server is listening on]
+
+Constraints
+UDP Packets ==> sendto() & recvfrom()
+
+three types of messages 
+typedef enum im_message_type {
+  REGISTRATION_MESSAGE,
+  DEREGISTRATION_MESSAGE,
+  INSTANT_MESSAGE
+} im_message_type;
+
+typedef struct im_message {
+  im_message_type type;
+  char to[256];
+  char from[256];
+  char message[1024];
+} im_message;
+
+REGISTRATION MESSAGE
+at client
+from = user_name
+type = REGISTRATION_MESSAGE
+
+at server
+extract client's user_name, ip address & port 

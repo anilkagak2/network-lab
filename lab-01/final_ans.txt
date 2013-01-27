@@ -1,0 +1,73 @@
+	CS 349: Networks Lab Assignment 01 Solutions
+
+1)
+a) jampui.iitg.ernet.in
+rtt min/avg/max = 259.541/260.646/267.494 ms
+
+b) www.iitg.ac.in
+rtt min/avg/max = 299.145/299.400/300.550 ms
+
+c) www.iitkgp.ac.in
+rtt min/avg/max = 290.019/291.037/297.392 ms
+
+d) www.iitm.ac.in
+Reply: 20 packets transmitted, 0 received, 100% packet loss, time 19002ms
+This host is not allowing ICMP ping to itself. Most probably it's down, but
+according to some stats[WEB] IITM doesn't allow ICMP requests to itself.
+It may be the case that a firewall is perfoming the packet filtering.
+
+These are the possible cases when a destination cannot be ping'd:
+1) Host is down
+2) No route to destination host exists from the local host or vice-versa
+3) Firewall is filtering the ICMP packets
+4) Because of the network congestion Echo replies couldn't made back to the source
+
+2)
+RTT depends on the packet size.
+transmit time = packet_size / bandwidth
+RTT includes the transmit time within itself & hence as the packet size increases the round trip time increases with some exceptions due to network congestion & queuing delays in the intermediate nodes.
+
+3)
+a) Hop Counts 
+  using traceroute available at http://www.cogentco.com/en/network/looking-glass
+  Router Location CH-Zurich
+
+  host			hop-count
+  jampui.iitg.ernet.in	13
+  www.iitg.ac.in	16
+  www.iitkgp.ac.in	18 (after that no reply)
+  www.iitm.ac.in	13 (after that no reply)
+
+b) Common hosts between the two paths given by
+   http://ping.eu/traceroute/ & http://www.cogentco.com/en/network/looking-glass
+
+   Traceroute with http://ping.eu/traceroute/ was not possible to trace the locations till end for even www.iitg.ac.in & jampui.iitg.ernet.in which was possible in case of looking-glass
+
+jampui.iitg.ernet.in
+ 6  if-2-2.tcore1.PYE-Paris.as6453.net (80.231.154.18) 
+ 7  if-8-1600.tcore1.WYN-Marseille.as6453.net (80.231.217.5)
+ 8  if-9-5.tcore1.MLV-Mumbai.as6453.net (80.231.217.18)
+
+www.iitg.ac.in
+ 6  if-12-2.tcore1.PYE-Paris.as6453.net (80.231.154.69) 
+ 7  if-8-1600.tcore1.WYN-Marseille.as6453.net (80.231.217.5) 
+ 8  if-9-5.tcore1.MLV-Mumbai.as6453.net (80.231.217.18)
+
+www.iitkgp.ac.in
+  No common hosts found.
+
+www.iitm.ac.in
+ 5  if-3-2.tcore1.PVU-Paris.as6453.net (80.231.153.53)
+    if-5-2.tcore1.PVU-Paris.as6453.net (80.231.153.121)
+ 6  if-2-2.tcore1.PYE-Paris.as6453.net (80.231.154.18)
+    if-12-2.tcore1.PYE-Paris.as6453.net (80.231.154.69) 
+ 7  if-8-1600.tcore1.WYN-Marseille.as6453.net (80.231.217.5)
+ 8  if-9-5.tcore1.MLV-Mumbai.as6453.net (80.231.217.18)
+ 9  if-7-2.tcore1.CXR-Chennai.as6453.net (180.87.36.34)
+
+c) Yes paths change during different hours adjusting them in response to the network congestion or any other errors like an intermediate node goes down.
+
+d) Traceroute works by sending UDP Packets(in Unix) with varying TTL so that when a packet expires at any intermediate router, the router sends back the ICMP Time Exceeded Message(TEM) back to the source & the source increases the TTL & resends the packet. This way we traceroute can figure out partial path to the destination even if the destination doesn't allow ICMP replies or filter packets. 
+
+e) Ping expects ICMP Echo Reply while Traceroute(in Unix) expects ICMP Time Exceeded Message(TEM). 
+It may be the case that the destination doesn't allows ICMP TEM replies or it is also possible that any router in the path blocks ICMP TEM replies & hence will not be traceroute it as pinging to those destination just forwards the ICMP Echo Request from source to destination & not asks for ICMP TEM at any router.

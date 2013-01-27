@@ -1,0 +1,87 @@
+traceroute to www.iitkgp.ac.in (203.110.245.243), 30 hops max, 60 byte packets
+1 	static.185.212.4.46.clients.your-server.de 	46.4.212.185 	de 	1.675 ms 	1.886 ms 	1.882 ms
+2 	hos-tr1.juniper1.rz13.hetzner.de 	213.239.224.1 	de 	0.132 ms 	0.145 ms 	 
+	hos-tr4.juniper2.rz13.hetzner.de 	213.239.224.97 	de 	0.124 ms
+3 	hos-bb2.juniper4.rz2.hetzner.de 	213.239.240.138 	de 	2.745 ms 	2.745 ms 	2.737 ms
+4 	r1nue1.core.init7.net 	77.109.135.101 	ch 	2.794 ms 	3.002 ms 	2.883 ms
+5 	r1nue2.core.init7.net 	77.109.140.154 	ch 	3.243 ms 	2.978 ms 	2.955 ms
+6 	r1fra3.core.init7.net 	77.109.140.53 	ch 	9.932 ms 	9.876 ms 	9.882 ms
+7 	r1fra1.core.init7.net 	77.109.128.137 	ch 	9.140 ms 	 	 
+	r1fra1.core.init7.net 	77.109.128.221 	ch 	7.577 ms 	 
+	r1fra1.core.init7.net 	77.109.128.137 	ch 	9.140 ms
+8 	peer1.fra1.flagtel.com 	80.81.192.64 	de 	6.484 ms 	7.049 ms 	7.037 ms
+9 	  	  	  	*	*	*
+10 	so-4-0-0.0.pjr01.mmb004.flagtel.com 	85.95.25.113 	gb 	163.712 ms 	 	 
+	so-3-1-0.0-pjr02.mmb004-flagtel.com 	85.95.26.158 	gb 	163.548 ms 	 
+	so-4-0-0.0.pjr01.mmb004.flagtel.com 	85.95.25.113 	gb 	163.712 ms
+11 	  	  	  	*	*	*
+12 	  	  	  	*	*	*
+13 	  	  	  	*	*	*
+No reply for 3 hops. Assuming we reached firewall.
+
+traceroute to www.iitm.ac.in (203.199.213.13), 30 hops max, 60 byte packets
+1 	static.185.212.4.46.clients.your-server.de 	46.4.212.185 	de 	1.155 ms 	1.161 ms 	1.202 ms
+2 	hos-tr4.juniper2.rz13.hetzner.de 	213.239.224.97 	de 	0.174 ms 	0.178 ms 	 
+	hos-tr3.juniper2.rz13.hetzner.de 	213.239.224.65 	de 	0.142 ms
+3 	hos-bb2.juniper4.rz2.hetzner.de 	213.239.240.138 	de 	2.755 ms 	2.760 ms 	2.746 ms
+4 	nbg-s1-rou-1001.DE.eurorings.net 	134.222.107.20 	nl 	130.538 ms 	130.802 ms 	130.703 ms
+5 	ffm-s1-rou-1102.DE.eurorings.net 	134.222.227.117 	nl 	6.726 ms 	6.721 ms 	6.696 ms
+6 	ffm-s2-rou-1041.DE.eurorings.net 	134.222.229.74 	nl 	6.768 ms 	6.771 ms 	6.757 ms
+7 	  	  	  	*	*	*
+8 	if-3-2.tcore1.PVU-Paris.as6453.net 	80.231.153.53 	  	154.661 ms 	 	 
+	if-5-2.tcore1.PVU-Paris.as6453.net 	80.231.153.121 	  	157.907 ms 	 
+	if-3-2.tcore1.PVU-Paris.as6453.net 	80.231.153.53 	  	154.661 ms
+9 	if-2-2.tcore1.PYE-Paris.as6453.net 	80.231.154.18 	  	159.663 ms 	 	 
+	if-12-2.tcore1.PYE-Paris.as6453.net 	80.231.154.69 	  	155.886 ms 	 
+	if-2-2.tcore1.PYE-Paris.as6453.net 	80.231.154.18 	  	159.663 ms
+10 	if-8-1600.tcore1.WYN-Marseille.as6453.net 	80.231.217.5 	  	157.100 ms 	157.083 ms 	157.176 ms
+11 	if-9-5.tcore1.MLV-Mumbai.as6453.net 	80.231.217.18 	  	151.366 ms 	151.143 ms 	151.586 ms
+12 	if-7-2.tcore1.CXR-Chennai.as6453.net 	180.87.36.34 	in 	158.017 ms 	156.099 ms 	154.447 ms
+13 	  	  	  	*	*	*
+14 	  	  	  	*	*	*
+15 	  	  	  	*	*	*
+No reply for 3 hops. Assuming we reached firewall.
+
+ 			
+
+traceroute to www.iitg.ac.in (14.139.196.22), 30 hops max, 60 byte packets
+1 	static.185.212.4.46.clients.your-server.de 	46.4.212.185 	de 	1.051 ms 	1.065 ms 	1.106 ms
+2 	hos-tr4.juniper2.rz13.hetzner.de 	213.239.224.97 	de 	0.400 ms 	 	 
+	hos-tr1.juniper1.rz13.hetzner.de 	213.239.224.1 	de 	0.130 ms 	 
+	hos-tr2.juniper1.rz13.hetzner.de 	213.239.224.33 	de 	0.123 ms
+3 	hos-bb2.juniper4.rz2.hetzner.de 	213.239.240.138 	de 	2.862 ms 	2.838 ms 	2.838 ms
+4 	ae55.edge7.Frankfurt1.Level3.net 	195.16.162.253 	gb 	7.260 ms 	7.255 ms 	7.246 ms
+5 	ae-2-70.edge4.Frankfurt1.Level3.net 	4.69.154.72 	us 	7.402 ms 	 	 
+	ae-3-80.edge4.Frankfurt1.Level3.net 	4.69.154.136 	us 	32.655 ms 	 
+	ae-4-90.edge4.Frankfurt1.Level3.net 	4.69.154.200 	us 	7.207 ms
+6 	  	  	  	*	*	*
+7 	if-5-2.tcore1.PVU-Paris.as6453.net 	80.231.153.121 	  	131.299 ms 	 	 
+	if-3-2.tcore1.PVU-Paris.as6453.net 	80.231.153.53 	  	128.341 ms 	128.465 ms
+8 	if-12-2.tcore1.PYE-Paris.as6453.net 	80.231.154.69 	  	127.244 ms 	 	 
+	if-2-2.tcore1.PYE-Paris.as6453.net 	80.231.154.18 	  	129.530 ms 	129.521 ms
+9 	if-8-1600.tcore1.WYN-Marseille.as6453.net 	80.231.217.5 	  	131.289 ms 	130.838 ms 	130.966 ms
+10 	if-9-5.tcore1.MLV-Mumbai.as6453.net 	80.231.217.18 	  	128.165 ms 	127.030 ms 	127.922 ms
+11 	  	  	  	*	*	*
+12 	  	  	  	*	*	*
+13 	  	  	  	*	*	*
+No reply for 3 hops. Assuming we reached firewall.
+
+raceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 60 byte packets
+1 	static.185.212.4.46.clients.your-server.de 	46.4.212.185 	de 	2.196 ms 	2.187 ms 	2.188 ms
+2 	hos-tr4.juniper2.rz13.hetzner.de 	213.239.224.97 	de 	13.090 ms 	 	 
+	hos-tr1.juniper1.rz13.hetzner.de 	213.239.224.1 	de 	0.129 ms 	0.131 ms
+3 	hos-bb2.juniper4.rz2.hetzner.de 	213.239.240.138 	de 	2.757 ms 	2.756 ms 	2.709 ms
+4 	ae55.edge7.Frankfurt1.Level3.net 	195.16.162.253 	gb 	7.281 ms 	7.282 ms 	7.277 ms
+5 	ae-2-70.edge4.Frankfurt1.Level3.net 	4.69.154.72 	us 	7.275 ms 	7.269 ms 	 
+	ae-1-60.edge4.Frankfurt1.Level3.net 	4.69.154.8 	us 	7.251 ms
+6 	ix-2-3-0-0.tcore1.FR0-Frankfurt.as6453.net 	195.219.180.97 	  	7.436 ms 	 	 
+	  		in 		
+7 	if-3-2.tcore1.PVU-Paris.as6453.net 	80.231.153.53 	  	153.001 ms 	152.992 ms 	 
+	if-5-2.tcore1.PVU-Paris.as6453.net 	80.231.153.121 	  	134.022 ms
+8 	if-2-2.tcore1.PYE-Paris.as6453.net 	80.231.154.18 	  	129.381 ms 	129.368 ms 	129.357 ms
+9 	if-8-1600.tcore1.WYN-Marseille.as6453.net 	80.231.217.5 	  	131.107 ms 	131.100 ms 	131.082 ms
+10 	if-9-5.tcore1.MLV-Mumbai.as6453.net 	80.231.217.18 	  	127.943 ms 	127.918 ms 	127.130 ms
+11 	  	  	  	*	*	*
+12 	  	  	  	*	*	*
+13 	  	  	  	*	*	*
+No reply for 3 hops. Assuming we reached firewall.

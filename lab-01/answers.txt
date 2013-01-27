@@ -1,0 +1,34 @@
+1) 
+Reasons for no ping response
+TTL Expired in Transit
+The TTL value determines the maximum amount of time an IP packet may live in the network without reaching its destination. It is effectively a bound on the number of routers an IP packet may pass through before being discarded. This message indicates that the TTL expired in transit. Number of required hops exceeds TTL. Increase TTL by using the ping -i switch.
+
+Destination Host Unreachable
+The host that you are trying to ping is down or is not operating on the network. A local or remote route does not exist for destination host. Modify the local route table or notify the router administrator.
+
+Request Timed Out
+The ping command timed out because there was no reply from the host. No Echo Reply messages were received due to network traffic, failure of the ARP request packet filtering, or router error. Increase the wait time using the ping -w switch.
+
+Unknown Host
+The IP Address or the Host Name does not exist in the network or the destination host name cannot be resolved. Verify name and availability of DNS servers.
+
+TTL Expired in Transit
+The number of hops required to reach the destination exceeds the TTL set by the sending host to forward the packets. The default TTL value for ICMP Echo Requests sent by Ping is 32. In some cases, this is not enough to travel the required number of links to a destination. You can increase the TTL using the -i switch, up to a maximum of 255 links.
+If increasing the TTL value fails to resolve the problem, the packets are being forwarded in a routing loop, a circular path among routers. Use Tracert to track down the source of the routing loop, which appears as a repeated series of the same IP addresses in the Tracert report. Next, make an appropriate change to the routing tables, or inform the administrator of a remote router of the problem.
+
+Destination Host Unreachable
+This message indicates one of two problems: either the local system has no route to the desired destination, or a remote router reports that it has no route to the destination. The two problems can be distinguished by the form of the message. If the message is simply "Destination Host Unreachable," then there is no route from the local system, and the packets to be sent were never put on the wire. Use the Route utility to check the local routing table.
+If the message is "Reply From < IP address >: Destination Host Unreachable," then the routing problem occurred at a remote router, whose address is indicated by the "< IP address >" field. Use the appropriate utility or facility to check the IP routing table of the router assigned the IP address of < IP address >.
+If you pinged using an IP address, retry it with a host name to ensure that the IP address you tried is correct.
+
+Request Timed Out
+This message indicates that no Echo Reply messages were received within the default time of 1 second. This can be due to many different causes; the most common include network congestion, failure of the ARP request, packet filtering, routing error, or a silent discard. Most often, it means that a route back to the sending host has failed. This might be because the destination host does not know the route back to the sending host, or one of the intermediary routers does not know the route back, or even that the destination host's default gateway does not know the route back. Check the routing table of the destination host to see whether it has a route to the sending host before checking tables at the routers.
+
+If the remote routing tables are correct and contain a valid route back to the sending host, to see if the ARP cache lacks the proper address, use the arp -a command to print the contents of the ARP cache. Also, check the subnet mask to be sure that a remote address has not been interpreted as local.
+
+Next, use Tracert to follow the route to the destination. While Tracert does not record the address of the last hop or the path that the packet followed on the return path, it might show that the packet made it to the destination. If this is the case, the problem is probably a routing issue on the return path. If the trace doesn't quite reach the destination, it might be because the target host is protected by a firewall. When a firewall protects the destination, ICMP packet filtering prevents the ping packets—or any other ICMP messages—from crossing the firewall and reaching their destination.
+
+To check for network congestion, simply increase the allowed latency by setting a higher wait time with the -w switch, such as 5000 milliseconds. Try to ping the destination again. If the request still times out, congestion is not the problem; an address resolution problem or routing error is a more likely issue.
+
+Unknown Host
+This error message indicates that the requested host name cannot be resolved to its IP address; check that the name is entered correctly and that the DNS servers can resolve it.
