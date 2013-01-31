@@ -1,6 +1,6 @@
 /*
- * server.h:	Header containing structure & function declarations
- *		for server
+ * client.h:	Header containing structure & function declarations
+ *		for client
  * Anil Kag
  * a.kag@iitg.ernet.in
  */
@@ -13,11 +13,13 @@
 #include <cstdlib>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <arpa/inet.h>
 #include <inetdb.h>
 #include <unistd.h>
 
-#define NAME_MAX_LEN 256
+#define NAME_MAX_LEN 	256
+#define MESSAGE_MAX_LEN 1024
 
 /* Client Class. */
 class Client {
@@ -32,6 +34,12 @@ class Client {
 	void	start ();
 
 	private:
-		/* Sets up the connection. */
-	bool 	connect ();
+	int			client_socket;  	// client UDP socket
+	struct 	sockaddr_in 	server;			// server address structure
+	char			user[NAME_MAX_LEN];	// user name
+	char			host[NAME_MAX_LEN];	// server name
+
+	bool	deregister ();
+	void	recv_message ();	// recvfrom server
+	void 	send_message ();	// send message to server
 };
