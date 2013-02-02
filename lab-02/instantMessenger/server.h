@@ -15,12 +15,10 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
-#include <inetdb.h>
+#include <netdb.h>
 #include <unistd.h>
 
 using namespace std;
-
-#define NAME_MAX_LEN 256
 
 typedef struct user {
 	char user_name[256];		// user name
@@ -51,7 +49,7 @@ class Server {
 	bool	send_instant_msg	(struct im_message *msg, struct sockaddr_in *client);
 
 		/* Searches user in the table. */
-	user*	search_user 		(const char *user_name);
+//	user*	search_user 		(const char *user_name);
 			// instant message
 
 		/* Sets up the connection. */

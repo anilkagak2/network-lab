@@ -7,9 +7,11 @@
 
 #include "server.h"
 
+#define _PORT_ 5555
+
 Server::Server () {
 	master_socket = -1;	// Initial value
-	port = 5555;		// Port number
+	port = _PORT_;		// Port number
 }
 
 Server::~Server () {
@@ -24,21 +26,25 @@ Server::setup_server () {
 	int sock_len = sizeof (localhost);
 
 	// Create UDP socket
-	if ( (master_socket = (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+	// Best error --> ever found :P 
+	//if ( (master_socket = (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+	if ( (master_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
 		perror ("Server: Create Master Socket");
 		return false;		// couldn't create master socket
 	}
 
+	cout << "Master socket " << master_socket << endl;
 	// clear the struct
 	memset (&localhost, 0, sizeof (localhost));
 
 	// fill in the required fields
 	localhost.sin_family = AF_INET;
-	localhost.sin_addr.s_addr = htonl (INADDR_ANY);
+	localhost.sin_addr.s_addr = htonl(INADDR_ANY);
+//	inet_aton ("localhost", &localhost.sin_addr);
 	localhost.sin_port = htons (port);
 
 	// bind the socket to an address:port
-	if (bind (master_socket, (struct sockaddr *) &localhost, sock_len) == -1) {
+	if (bind (master_socket, (struct sockaddr *) &localhost, sizeof (localhost)) < 0) {
 		// Error occurred while binding to localhost
 		close (master_socket);
 		perror ("Server: Bind to localhost");
@@ -57,11 +63,13 @@ void
 Server::start () {
 	// client address structure (to be recieved)
 	struct sockaddr_in client;
-	int client_len = sizeof (client);
+	socklen_t client_len = sizeof (struct sockaddr_storage);
 
 	// message structure
 	im_message msg;
 	int msg_len = sizeof (msg);
+
+	cout << "Server: Starting... \n";
 
 	// Setup server
 	if (!setup_server ()) {
@@ -69,11 +77,13 @@ Server::start () {
 		return;
 	}
 
-	// receive messages from users
+	cout << "Server: Start Successful\n";
+
+	// receive message from users
 	while (1) {
 		int len = 0;
-		len = recvfrom (master_socket, msg, msg_len, 0,
-			(struct sockaddr *) &client, client_len);
+		len = recvfrom (master_socket, &msg, msg_len, 0,
+			(struct sockaddr *) &client, &client_len);
 
 		if (len == -1) continue;
 		else if (len != msg_len) {
@@ -92,27 +102,29 @@ Server::start () {
 				fprintf (stderr, "getaddrnameinfo: %s\n", gai_strerror (s));
 
 			// check the type of message received
-			if (msg.im_message_type == REGISTRATION_MESSAGE) {
+			if (msg.type == REGISTRATION_MESSAGE) {
 				// register the user
-				if (!register_user (msg, &client)) 
+				if (!register_user (&msg, &client)) 
 					cerr << "Server: cannot register the user " << msg.from << endl;
 				else 	cout << "Server: registered user " << msg.from << endl;
 			}
 
-			else if (msg.im_message_type == DEREGISTRATION_MESSAGE) {
+			else if (msg.type == DEREGISTRATION_MESSAGE) {
 				// deregister the user
-				if (!deregister_user (msg, &client)) 
+				if (!deregister_user (&msg, &client)) 
 					cerr << "Server: cannot deregister the user " << msg.from << endl;
 				else 	cout << "Server: deregistered user " << msg.from << endl;
 			}
 
 			else {
 				// instant message
-				if (!send_instant_msg (msg, &client)) 
+				if (!send_instant_msg (&msg, &client)) {
 					cerr << "Server: cannot send message from " << msg.from;
 			       		cerr << "to " << msg.to << endl;
-				else 	cout << "Server:  message sent from " << msg.from;
+				} else {
+					cout << "Server:  message sent from " << msg.from;
 			       		cout << "to " << msg.to << endl;
+				}
 			 }
 		}
 	}
@@ -123,27 +135,28 @@ bool
 Server::register_user (struct im_message *msg, struct sockaddr_in *client) {
 	// search for it in the list
 	list<user>::iterator it;
-	for (it = users.begin (); it != end (); it++) {
+	for (it = users.begin (); it != users.end (); it++) {
 		// already registered 
-		if (strncmp (*it->user_name, msg->from, NAME_MAX_LEN) == 0) {
+		if (strncmp (it->user_name, msg->from, NAME_MAX_LEN) == 0) {
 			// check the address, if changed then update it
-			if ((*it->user_addr.sin_addr != client->sin_addr) ||
-			   (*it->user_addr.sin_port != client->sin_port)) {
-			       	*it->user_addr.sin_addr = client->sin_addr;
-				*it->user_addr.sin_port = client->sin_port;
-			}
+			struct sockaddr_in *s = &it->user_addr;
+			if ((s->sin_addr.s_addr != client->sin_addr.s_addr) ||
+			   (it->user_addr.sin_port != client->sin_port)) {
+			       	it->user_addr.sin_addr.s_addr = client->sin_addr.s_addr;
+				it->user_addr.sin_port = client->sin_port;
+			} // PLEASE CHECK WHETHER THE TABLE IS REALLY CHANGED HERE.. ITS A VALID DOUBT
 
 			return true;
 		}
 	}
 
 	// prepare the new entry to be inserted in the list
-	user new;
-	strncpy (new.user_name, msg->from, NAME_MAX_LEN);
-	memcpy (&new.user_addr, msg->from, sizeof (msg->user_name));
+	user unew;
+	strncpy (unew.user_name, msg->from, NAME_MAX_LEN);
+	memcpy (&unew.user_addr, client, sizeof (sockaddr_in));
 
 	// Yet to think about the usage of list for maintaining the list of users
-	users.push_back (new);
+	users.push_back (unew);
 	return true;
 }
 
@@ -151,8 +164,8 @@ bool
 Server::deregister_user	(struct im_message *msg, struct sockaddr_in *client) {
 	// search for it in the list
 	list<user>::iterator it;
-	for (it = users.begin (); it != end (); it++) { 
-		if (strncmp (*it->user_name, msg->from, NAME_MAX_LEN) == 0) {
+	for (it = users.begin (); it != users.end (); it++) { 
+		if (strncmp (it->user_name, msg->from, NAME_MAX_LEN) == 0) {
 			// removing the user from table
 			users.erase (it);
 			return true;
@@ -167,8 +180,8 @@ bool
 Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 	// search for it in the list
 	list<user>::iterator it;
-	for (it = users.begin (); it != end (); it++) { 
-		if (strncmp (*it->user_name, msg->from, NAME_MAX_LEN) == 0) {
+	for (it = users.begin (); it != users.end (); it++) { 
+		if (strncmp (it->user_name, msg->from, NAME_MAX_LEN) == 0) {
 			break;
 		}
 	}
@@ -179,24 +192,24 @@ Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 		string msg_content;
 
 		msg_content = "User ";
-		msg_content += msg.to;
+		msg_content += msg->to;
 		msg_content += " not registered";
 
-		strncpy (ack_msg->to, msg->from, NAME_MAX_LEN);
-		strncpy (ack_msg->from, "Server", NAME_MAX_LEN);
-		strncpy (ack_msg->msg, msg_content.c_str (), 1024);
+		strncpy (ack_msg.to, msg->from, NAME_MAX_LEN);
+		strncpy (ack_msg.from, "Server", NAME_MAX_LEN);
+		strncpy (ack_msg.message, msg_content.c_str (), 1024);
 
-		if (sendto (master_socket, ack_msg, sizeof (ack_msg), 0, (struct sockaddr *) client,
+		if (sendto (master_socket, &ack_msg, sizeof (ack_msg), 0, (struct sockaddr *) client,
 					sizeof (*client)) != sizeof (ack_msg)) 
-			cerr << "Server: Error sending back \"NOT REGISTERED\" ack message to " << msg.from << endl;
+			cerr << "Server: Error sending back \"NOT REGISTERED\" ack message to " << msg->from << endl;
 		return false;
 	}
 
 	else {
-		struct sockaddr_in sin = *it->user_addr;
+		struct sockaddr_in sin = it->user_addr;
 		if (sendto (master_socket, msg, sizeof (msg), 0, (struct sockaddr *) &sin,
 					sizeof (sin)) != sizeof (msg)) {
-			cerr << "Server: Error sending message to " << msg.to << endl;
+			cerr << "Server: Error sending message to " << msg->to << endl;
 			return false;
 		}
 
@@ -206,13 +219,13 @@ Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 
 /* TODO: How to fit this into the class requirement. */
 /* Searches user in the table. */
-user*
+/*user*
 Server::search_user (const char *user_name) {
 	if (users.empty ()) return NULL;
 
 	list<user>::iterator it;
-	for (it = users.begin (); it != end (); it++) {
-		if (strncmp (*it->user_name, user_name, NAME_MAX_LEN) == 0) return it;
+	for (it = users.begin (); it != users.end (); it++) {
+		if (strncmp (it->user_name, user_name, NAME_MAX_LEN) == 0) return it;
 	}
 }
-
+*/

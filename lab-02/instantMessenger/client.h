@@ -15,11 +15,10 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <arpa/inet.h>
-#include <inetdb.h>
+#include <netdb.h>
 #include <unistd.h>
 
-#define NAME_MAX_LEN 	256
-#define MESSAGE_MAX_LEN 1024
+using namespace std;
 
 /* Client Class. */
 class Client {
@@ -40,6 +39,6 @@ class Client {
 	char			host[NAME_MAX_LEN];	// server name
 
 	bool	deregister ();
-	void	recv_message ();	// recvfrom server
-	void 	send_message ();	// send message to server
+	void	recv_message ();			// recvfrom server
+	void 	send_message (string line);		// send message to server
 };

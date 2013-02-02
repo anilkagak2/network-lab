@@ -5,6 +5,9 @@
  * a.kag@iitg.ernet.in
  */
 
+#define NAME_MAX_LEN 256
+#define MESSAGE_MAX_LEN 1024
+
 /* Different types of messages used in the model. */
 typedef enum im_message_type {
   REGISTRATION_MESSAGE,		// Registration message
