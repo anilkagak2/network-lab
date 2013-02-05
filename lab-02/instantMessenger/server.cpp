@@ -67,7 +67,7 @@ Server::start () {
 
 	// message structure
 	im_message msg;
-	int msg_len = sizeof (msg);
+	size_t msg_len = sizeof (msg);
 
 	cout << "Server: Starting... \n";
 
@@ -82,6 +82,8 @@ Server::start () {
 	// receive message from users
 	while (1) {
 		int len = 0;
+		memset (&msg, 0, sizeof (msg));
+
 		len = recvfrom (master_socket, &msg, msg_len, 0,
 			(struct sockaddr *) &client, &client_len);
 
@@ -185,6 +187,7 @@ Server::deregister_user	(struct im_message *msg, struct sockaddr_in *client) {
 		if (strncmp (it->user_name, msg->from, NAME_MAX_LEN) == 0) {
 			// removing the user from table
 			users.erase (it);
+			cout << "Server: DeRegistered " << msg->from << endl;
 			return true;
 		}
 	}
@@ -224,18 +227,22 @@ Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 	}
 
 	else {
+#ifdef _DEBUG_ 
 		cout << "Server: going to send message to " << msg->to;
 		cout << " From " << msg->from << "Message " << msg->message << endl;
 		cout << "it->user_name is " << it->user_name << endl;
+#endif
 		struct sockaddr_in sin = it->user_addr;
-		if (sendto (master_socket, msg, sizeof (msg), 0, (struct sockaddr *) &sin,
-					sizeof (sin)) != sizeof (msg)) {
+		// sizeof (msg) = 4 & sizeof (*msg) = actual message size
+		if (sendto (master_socket, msg, sizeof (*msg), 0, (struct sockaddr *) &sin,
+					sizeof (sin)) != sizeof (*msg)) {
 			cerr << "Server: Error sending message to " << msg->to << endl;
 			return false;
 		}
-
+#ifdef _DEBUG_ 
 		cout << "message successfully sent to " << msg->to << " from " << msg->from << endl;
 		cout << "message was " << msg->message << endl;
+#endif
 		return true;
 	}
 }

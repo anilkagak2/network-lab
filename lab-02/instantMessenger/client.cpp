@@ -53,8 +53,10 @@ Client::Client (char *cuser, char *chost, char *port) {
 		return;
 	}
 
+#ifdef _DEBUG_ 
 	cout << "Client: registration message length " << msg_len ;
 	cout << " chars sent = " << ret_chars << endl;
+#endif
 	cout << "Client: Registered " << user << " at " << host << endl;
 	cout.flush ();
 
@@ -121,7 +123,9 @@ Client::start () {
 		// TODO:: Handling the recvfrom in start function but need to shift
 		// it's functionality to some stand-alone function
 		if ((rval == 1) && (FD_ISSET(client_socket, &readfds))) {
+#ifdef _DEBUG_ 
 			cout << "Client: going to receive message" << endl;
+#endif
 			/* We have socket input waiting, and can now do a recvfrom(). */
 			recv_message (); 
 		}
@@ -131,11 +135,16 @@ Client::start () {
 //			send_message (); 
 //				cerr << "Client: Cannot send message\n";
 
+#ifdef _DEBUG_ 
 			cout << "Client: going to send message" << endl;
+#endif
 			string line;
 		//	cin.clear ();
 			getline (cin, line);
+
+#ifdef _DEBUG_ 
 			cout << "Client: Message is --> " << line << endl;
+#endif
 
 // HOUSE KEEPING THINGS
 /*			int pos = 0;
@@ -169,6 +178,7 @@ Client::recv_message () {
 	im_message msg;
 	socklen_t len;
 
+	memset (&msg, 0, sizeof (msg));
 	if (recvfrom (client_socket, &msg, sizeof (msg), 0, (struct sockaddr *) &server,
 					//&len) != sizeof (msg)) {
 					&len) < 0) {
@@ -177,6 +187,9 @@ Client::recv_message () {
 			return;
 	}
 
+#ifdef _DEBUG_
+	cout << "Type of message is " << msg.type << " is addresses to " << msg.to << endl;
+#endif
 	cout << msg.from << ": " << msg.message << endl;
 }
 
@@ -192,13 +205,17 @@ Client::send_message (string line) {
 	string to = line.substr (0, pos);
 	string payload = line.substr (pos+1);
 
+#ifdef _DEBUG_
 	cout << "TO: " << to << endl;
 	cout << "MESG: " << payload <<  endl;
+#endif
 
 	if (payload.length () > MESSAGE_MAX_LEN-1 ) 
 		cerr << "Truncating the message to length " << MESSAGE_MAX_LEN-1 << endl;
 
 	im_message msg;
+	memset (&msg, 0, sizeof (msg));
+
 	msg.type = INSTANT_MESSAGE;
 	strncpy (msg.from, user, NAME_MAX_LEN);
 	strncpy (msg.to, to.c_str (), NAME_MAX_LEN);
