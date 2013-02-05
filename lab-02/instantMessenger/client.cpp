@@ -55,7 +55,8 @@ Client::Client (char *cuser, char *chost, char *port) {
 
 	cout << "Client: registration message length " << msg_len ;
 	cout << " chars sent = " << ret_chars << endl;
-	cout << "Client: Registered " << user << "at " << host << endl;
+	cout << "Client: Registered " << user << " at " << host << endl;
+	cout.flush ();
 
 	// TODO:: if required use some kind of registration acknowledgement in response to 
 	// client's registration message
@@ -102,8 +103,9 @@ Client::start () {
 
 	while (1) {
 		// display instant messenger prompt
-		cout.flush ();
-		cout << "imc> " ;
+		//cout.flush ();
+		//cin.flush ();
+		cout << "imc> " << endl;
 
 		/* Create set of file descriptors stdin(0) & client_socket. */
 		FD_CLR(client_socket, &readfds);
@@ -131,7 +133,7 @@ Client::start () {
 
 			cout << "Client: going to send message" << endl;
 			string line;
-			cin.clear ();
+		//	cin.clear ();
 			getline (cin, line);
 			cout << "Client: Message is --> " << line << endl;
 
@@ -168,8 +170,9 @@ Client::recv_message () {
 	socklen_t len;
 
 	if (recvfrom (client_socket, &msg, sizeof (msg), 0, (struct sockaddr *) &server,
-					&len) != sizeof (msg)) {
-			cerr << "Client: Error receiving message from " << msg.to << endl;
+					//&len) != sizeof (msg)) {
+					&len) < 0) {
+			cerr << "Client: Error receiving message from " << msg.from << endl;
 		//	return false;
 			return;
 	}

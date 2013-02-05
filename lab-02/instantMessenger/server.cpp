@@ -157,6 +157,23 @@ Server::register_user (struct im_message *msg, struct sockaddr_in *client) {
 
 	// Yet to think about the usage of list for maintaining the list of users
 	users.push_back (unew);
+
+	im_message ack_msg;
+	string msg_content;
+	socklen_t len = sizeof (struct sockaddr);
+
+	msg_content = "User ";
+	msg_content += msg->from;
+	msg_content += " registered successfully\n";
+
+	strncpy (ack_msg.to, msg->from, NAME_MAX_LEN);
+	strncpy (ack_msg.from, "Server", NAME_MAX_LEN);
+	strncpy (ack_msg.message, msg_content.c_str (), 1024);
+
+	if (sendto (master_socket, &ack_msg, sizeof (ack_msg), 0, (struct sockaddr *) &unew.user_addr,
+				len) != sizeof (ack_msg)) 
+		cerr << "Server: Error sending back \"REGISTRATION ACK\" message to " << msg->from << endl;
+
 	return true;
 }
 
@@ -181,7 +198,8 @@ Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 	// search for it in the list
 	list<user>::iterator it;
 	for (it = users.begin (); it != users.end (); it++) { 
-		if (strncmp (it->user_name, msg->from, NAME_MAX_LEN) == 0) {
+		// Beware it should be msg->to not from :)
+		if (strncmp (it->user_name, msg->to, NAME_MAX_LEN) == 0) {
 			break;
 		}
 	}
@@ -206,6 +224,9 @@ Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 	}
 
 	else {
+		cout << "Server: going to send message to " << msg->to;
+		cout << " From " << msg->from << "Message " << msg->message << endl;
+		cout << "it->user_name is " << it->user_name << endl;
 		struct sockaddr_in sin = it->user_addr;
 		if (sendto (master_socket, msg, sizeof (msg), 0, (struct sockaddr *) &sin,
 					sizeof (sin)) != sizeof (msg)) {
@@ -213,6 +234,8 @@ Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 			return false;
 		}
 
+		cout << "message successfully sent to " << msg->to << " from " << msg->from << endl;
+		cout << "message was " << msg->message << endl;
 		return true;
 	}
 }
@@ -220,12 +243,12 @@ Server::send_instant_msg (struct im_message *msg, struct sockaddr_in *client) {
 /* TODO: How to fit this into the class requirement. */
 /* Searches user in the table. */
 /*user*
-Server::search_user (const char *user_name) {
-	if (users.empty ()) return NULL;
+  Server::search_user (const char *user_name) {
+  if (users.empty ()) return NULL;
 
-	list<user>::iterator it;
-	for (it = users.begin (); it != users.end (); it++) {
-		if (strncmp (it->user_name, user_name, NAME_MAX_LEN) == 0) return it;
-	}
-}
-*/
+  list<user>::iterator it;
+  for (it = users.begin (); it != users.end (); it++) {
+  if (strncmp (it->user_name, user_name, NAME_MAX_LEN) == 0) return it;
+  }
+  }
+ */
