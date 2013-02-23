@@ -1,5 +1,5 @@
 /*
- * server.c:	Definitions of server class function
+ * server.cpp:	Definitions of server class function
  *	
  * Anil Kag
  * a.kag@iitg.ernet.in
@@ -9,11 +9,13 @@
 
 #define _PORT_ 5555
 
+/* Initialize the server parameters. */
 Server::Server () {
 	master_socket = -1;	// Initial value
 	port = _PORT_;		// Port number
 }
 
+/* Release the resources occupied (if any) by server. */
 Server::~Server () {
 	// close the master socket if it's valid
 	if (master_socket != -1) close (master_socket);
@@ -179,6 +181,7 @@ Server::register_user (struct im_message *msg, struct sockaddr_in *client) {
 	return true;
 }
 
+/* De-registers a user by removing it's record from the users list. */
 bool
 Server::deregister_user	(struct im_message *msg, struct sockaddr_in *client) {
 	// search for it in the list

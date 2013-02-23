@@ -3,7 +3,6 @@
 #		their backends
 # 
 # Anil Kag
-# IIT Guwahati
 # a.kag@iitg.ernet.in
 #
 

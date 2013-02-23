@@ -64,6 +64,7 @@ Client::Client (char *cuser, char *chost, char *port) {
 	// client's registration message
 }
 
+/* Sends DEREGISTRATION message to server. */
 bool
 Client::deregister () {
 	if (client_socket == -1) return false;
@@ -79,7 +80,7 @@ Client::deregister () {
 	// send the registration message to server
 	if (sendto (client_socket, &msg, msg_len, 0, 
 		(struct sockaddr *) &server, sizeof (server)) != msg_len) {
-		perror ("Client: Registration Failed");
+		perror ("Client: De-Registration Failed");
 		return false;
 	}
 
@@ -105,9 +106,9 @@ Client::start () {
 
 	while (1) {
 		// display instant messenger prompt
-		//cout.flush ();
-		//cin.flush ();
-		cout << "imc> " << endl;
+		//cout << "imc> " << endl;
+		cout << "imc> " ;
+		cout.flush ();
 
 		/* Create set of file descriptors stdin(0) & client_socket. */
 		FD_CLR(client_socket, &readfds);
@@ -133,13 +134,12 @@ Client::start () {
 		if ((rval == 1) && (FD_ISSET(0, &readfds))) {
 			/* We have input waiting on standard input, so we can go get it. */
 //			send_message (); 
-//				cerr << "Client: Cannot send message\n";
+//			cerr << "Client: Cannot send message\n";
 
 #ifdef _DEBUG_ 
 			cout << "Client: going to send message" << endl;
 #endif
 			string line;
-		//	cin.clear ();
 			getline (cin, line);
 
 #ifdef _DEBUG_ 
@@ -173,6 +173,7 @@ Client::start () {
 	}
 }
 
+/* Receives message from the server & decodes it. */
 void
 Client::recv_message () {
 	im_message msg;
@@ -193,6 +194,9 @@ Client::recv_message () {
 	cout << msg.from << ": " << msg.message << endl;
 }
 
+/* Parses the message given by user.
+ * Extracts the receiver's name & forms the instant message in order to sent to the server.
+ */
 void
 Client::send_message (string line) {
 	int pos = line.find_first_of (':');
