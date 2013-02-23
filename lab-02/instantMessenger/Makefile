@@ -52,4 +52,4 @@ cmain.o: cmain.cpp server.h message.h
 
 # cleans the object & binaries
 clean:
-	rm -rf *.o im-server im-client
+	rm -rf *.o im-serverD im-clientD ims imc
