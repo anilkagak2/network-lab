@@ -53,6 +53,11 @@ Server::setup_server () {
 		return false;
 	}
 
+	char host[1024], service[1024];
+	int rv = getnameinfo ((struct sockaddr *) &localhost, sizeof localhost, host, sizeof host, service, sizeof service, 0);
+	if (rv != 0) perror ("Getnameinfo failed");
+	else cout << "host " << host << " service " << service << endl;
+
 	cout << "Server: Bind Complete\n";
 	return true;
 }

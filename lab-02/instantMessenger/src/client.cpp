@@ -65,12 +65,16 @@ Client::Client (char *cuser, char *chost, char *port) {
 
 	fd_set socks;
 	struct timeval t;
+
+	/* Create set of file descriptors stdin(0) & client_socket. */
+	// this CLR is really required.. no clue why though.. :P
+	FD_CLR(client_socket, &socks);
 	FD_ZERO(&socks);
 	FD_SET(client_socket, &socks);
-	t.tv_sec = 5;	// wait for 5 seconds
+	t.tv_sec = 20;	// wait for 20 seconds
 	t.tv_usec = 0;	// wait for 0 micro-seconds
 	int ret = select(client_socket + 1, &socks, NULL, NULL, &t);
-	if (ret == -1) {
+	if (ret < 0) {
 		perror ("select in constructor failed\n");
 		exit (1);
 	}
@@ -90,7 +94,8 @@ Client::Client (char *cuser, char *chost, char *port) {
 	} else {
 		cout << "Client: Registration NOT ACKNOWLEDGED by Server & TIMEOUT occurred" << endl;
 		exit (1);
-	}
+	} 
+	cout << "came to end.. DONT know about the server's registration ack" << endl;
 }
 
 /* Sends DEREGISTRATION message to server. */
