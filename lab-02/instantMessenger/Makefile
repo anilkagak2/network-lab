@@ -6,9 +6,15 @@
 # a.kag@iitg.ernet.in
 #
 
-SRC=src/
-BIN=bin/
-OBJ=obj/
+SSRC=server/src/
+SBIN=server/bin/
+SOBJ=server/obj/
+
+CSRC=client/src/
+CBIN=client/bin/
+COBJ=client/obj/
+
+INC=include/message.h
 
 # Make all default
 all: im-serverD im-clientD ims imc
@@ -16,45 +22,45 @@ all: im-serverD im-clientD ims imc
 # Server
 # compilation of backend + main
 im-serverD: serverD.o smain.o
-	g++ $(OBJ)serverD.o $(OBJ)smain.o -o $(BIN)im-serverD 
+	g++ $(SOBJ)serverD.o $(SOBJ)smain.o -o $(SBIN)im-serverD 
 
 # as per the assignment server should be named "ims"
 ims: server.o smain.o
-	g++ $(OBJ)server.o $(OBJ)smain.o -o $(BIN)ims 
+	g++ $(SOBJ)server.o $(SOBJ)smain.o -o $(SBIN)ims 
 
 # server backend
-serverD.o: $(SRC)server.cpp $(SRC)server.h $(SRC)message.h
-	g++ -c $(SRC)server.cpp -o $(OBJ)serverD.o -D_DEBUG_
+serverD.o: $(SSRC)server.cpp $(SSRC)server.h $(INC)
+	g++ -c $(SSRC)server.cpp -o $(SOBJ)serverD.o -D_DEBUG_
 
-server.o: $(SRC)server.cpp $(SRC)server.h $(SRC)message.h
-	g++ -c $(SRC)server.cpp -o $(OBJ)server.o 
+server.o: $(SSRC)server.cpp $(SSRC)server.h $(INC)
+	g++ -c $(SSRC)server.cpp -o $(SOBJ)server.o 
 
 # server main function
-smain.o: $(SRC)smain.cpp $(SRC)server.h $(SRC)message.h
-	g++ -c $(SRC)smain.cpp -o $(OBJ)smain.o
+smain.o: $(SSRC)smain.cpp $(SSRC)server.h $(INC)
+	g++ -c $(SSRC)smain.cpp -o $(SOBJ)smain.o
 
 
 # 
 # Client
 # compilation of backend + main
 im-clientD: clientD.o cmain.o
-	g++ $(OBJ)clientD.o $(OBJ)cmain.o -o $(BIN)im-clientD
+	g++ $(COBJ)clientD.o $(COBJ)cmain.o -o $(CBIN)im-clientD
 
 # as per the assignment client should be named "imc"
 imc: client.o cmain.o
-	g++ $(OBJ)client.o $(OBJ)cmain.o -o $(BIN)imc
+	g++ $(COBJ)client.o $(COBJ)cmain.o -o $(CBIN)imc
 
 # client backend
-clientD.o: $(SRC)client.cpp $(SRC)client.h $(SRC)message.h
-	g++ -c $(SRC)client.cpp -o $(OBJ)clientD.o -D_DEBUG_
+clientD.o: $(CSRC)client.cpp $(CSRC)client.h $(INC)
+	g++ -c $(CSRC)client.cpp -o $(COBJ)clientD.o -D_DEBUG_
 
-client.o: $(SRC)client.cpp $(SRC)client.h $(SRC)message.h
-	g++ -c $(SRC)client.cpp -o $(OBJ)client.o
+client.o: $(CSRC)client.cpp $(CSRC)client.h $(INC)
+	g++ -c $(CSRC)client.cpp -o $(COBJ)client.o
 
 # client main function
-cmain.o: $(SRC)cmain.cpp $(SRC)server.h $(SRC)message.h
-	g++ -c $(SRC)cmain.cpp -o $(OBJ)cmain.o
+cmain.o: $(CSRC)cmain.cpp $(CSRC)client.h $(INC)
+	g++ -c $(CSRC)cmain.cpp -o $(COBJ)cmain.o
 
 # cleans the object & binaries
 clean:
-	rm -rf $(OBJ)*.o $(BIN)*
+	rm -rf $(SOBJ)*.o $(COBJ)*.o $(SBIN)* $(CBIN)*

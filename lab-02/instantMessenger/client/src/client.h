@@ -5,7 +5,7 @@
  * a.kag@iitg.ernet.in
  */
 
-#include "message.h"
+#include "../../include/message.h"
 #include <iostream>
 
 #include <cstdio>
