@@ -49,7 +49,7 @@ Client::Client (char *cuser, char *chost, char *port) {
 		(struct sockaddr *) &server, sizeof (server));
 
 	if (ret_chars == -1) {
-		perror ("Client: Registration Failed");
+		perror ("Client: Registration Message cannot be sent");
 		return;
 	}
 
@@ -57,11 +57,40 @@ Client::Client (char *cuser, char *chost, char *port) {
 	cout << "Client: registration message length " << msg_len ;
 	cout << " chars sent = " << ret_chars << endl;
 #endif
-	cout << "Client: Registered " << user << " at " << host << endl;
-	cout.flush ();
 
-	// TODO:: if required use some kind of registration acknowledgement in response to 
+	// Registration acknowledgement in response to 
 	// client's registration message
+	memset (&msg, 0, sizeof (msg));
+	socklen_t len;
+
+	fd_set socks;
+	struct timeval t;
+	FD_ZERO(&socks);
+	FD_SET(client_socket, &socks);
+	t.tv_sec = 5;	// wait for 5 seconds
+	t.tv_usec = 0;	// wait for 0 micro-seconds
+	int ret = select(client_socket + 1, &socks, NULL, NULL, &t);
+	if (ret == -1) {
+		perror ("select in constructor failed\n");
+		exit (1);
+	}
+	else if (ret)
+	{
+		if (recvfrom (client_socket, &msg, sizeof (msg), 0, (struct sockaddr *) &server,
+					&len) < 0) {
+			perror ("Client: No registration acknowledgment received");
+			exit(1);
+		}
+		if (msg.type == REGISTRATION_MESSAGE) {
+			cout << "Client: Registered " << user << " at " << host << endl;
+			cout << msg.from << ": " << msg.message << endl;
+			//		cout.flush ();
+			return;
+		}
+	} else {
+		cout << "Client: Registration NOT ACKNOWLEDGED by Server & TIMEOUT occurred" << endl;
+		exit (1);
+	}
 }
 
 /* Sends DEREGISTRATION message to server. */
@@ -79,7 +108,7 @@ Client::deregister () {
 
 	// send the registration message to server
 	if (sendto (client_socket, &msg, msg_len, 0, 
-		(struct sockaddr *) &server, sizeof (server)) != msg_len) {
+				(struct sockaddr *) &server, sizeof (server)) != msg_len) {
 		perror ("Client: De-Registration Failed");
 		return false;
 	}
@@ -133,8 +162,8 @@ Client::start () {
 
 		if ((rval == 1) && (FD_ISSET(0, &readfds))) {
 			/* We have input waiting on standard input, so we can go get it. */
-//			send_message (); 
-//			cerr << "Client: Cannot send message\n";
+			//			send_message (); 
+			//			cerr << "Client: Cannot send message\n";
 
 #ifdef _DEBUG_ 
 			cout << "Client: going to send message" << endl;
@@ -146,12 +175,12 @@ Client::start () {
 			cout << "Client: Message is --> " << line << endl;
 #endif
 
-// HOUSE KEEPING THINGS
-/*			int pos = 0;
-			pos = line.find_first_not_of (" \t");
-			if (pos != string::npos) line = line.substr (0, pos+1);
-*/
-//			cout << line << endl;
+			// HOUSE KEEPING THINGS
+			/*			int pos = 0;
+						pos = line.find_first_not_of (" \t");
+						if (pos != string::npos) line = line.substr (0, pos+1);
+			 */
+			//			cout << line << endl;
 
 			// EXIT
 			if (!strncmp (line.c_str (), "exit", 4)) {
@@ -164,7 +193,7 @@ Client::start () {
 			}
 		}
 
-//		if (rval == -1 && errno == EINTR) continue;
+		//		if (rval == -1 && errno == EINTR) continue;
 
 		if (rval == -1) {
 			perror ("Client: Select()");
@@ -181,12 +210,12 @@ Client::recv_message () {
 
 	memset (&msg, 0, sizeof (msg));
 	if (recvfrom (client_socket, &msg, sizeof (msg), 0, (struct sockaddr *) &server,
-					//&len) != sizeof (msg)) {
-					&len) < 0) {
+				//&len) != sizeof (msg)) {
+		&len) < 0) {
 			cerr << "Client: Error receiving message from " << msg.from << endl;
-		//	return false;
+			//	return false;
 			return;
-	}
+		}
 
 #ifdef _DEBUG_
 	cout << "Type of message is " << msg.type << " is addresses to " << msg.to << endl;
@@ -227,9 +256,9 @@ Client::send_message (string line) {
 	msg.message[payload.length ()] = '\0';
 
 	if (sendto (client_socket, &msg, sizeof (msg), 0, (struct sockaddr *) &server,
-					sizeof (server)) != sizeof (msg)) {
-			cerr << "Client: Error sending message to " << msg.to << endl;
+				sizeof (server)) != sizeof (msg)) {
+		cerr << "Client: Error sending message to " << msg.to << endl;
 		//	return false;
-			return;
+		return;
 	}
 }

@@ -173,6 +173,7 @@ Server::register_user (struct im_message *msg, struct sockaddr_in *client) {
 	strncpy (ack_msg.to, msg->from, NAME_MAX_LEN);
 	strncpy (ack_msg.from, "Server", NAME_MAX_LEN);
 	strncpy (ack_msg.message, msg_content.c_str (), 1024);
+	ack_msg.type = REGISTRATION_MESSAGE;
 
 	if (sendto (master_socket, &ack_msg, sizeof (ack_msg), 0, (struct sockaddr *) &unew.user_addr,
 				len) != sizeof (ack_msg)) 
