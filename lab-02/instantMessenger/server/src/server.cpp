@@ -1,4 +1,5 @@
 /*
+ * IM-Ak2 1.0
  * server.cpp:	Definitions of server class function
  *	
  * Anil Kag
@@ -42,8 +43,10 @@ Server::setup_server () {
 	// fill in the required fields
 	localhost.sin_family = AF_INET;
 	localhost.sin_addr.s_addr = htonl(INADDR_ANY);
-//	inet_aton ("localhost", &localhost.sin_addr);
+//	inet_aton ("localhost", &localhost.sin_addr);	// inet_aton is not for localhost
+#ifndef _AUTO_PICK_PORT_
 	localhost.sin_port = htons (port);
+#endif
 
 	// bind the socket to an address:port
 	if (bind (master_socket, (struct sockaddr *) &localhost, sizeof (localhost)) < 0) {
@@ -53,11 +56,16 @@ Server::setup_server () {
 		return false;
 	}
 
-	char host[1024], service[1024];
+#ifdef _AUTO_PICK_PORT_
+	socklen_t len;
+	cout << "getsockname :  " << getsockname (master_socket, (struct sockaddr *) &localhost, &len) << endl;
+#endif
+	cout << "sockaddr port --> " << ntohs (localhost.sin_port) << endl;
+/*	char host[1024], service[1024];
 	int rv = getnameinfo ((struct sockaddr *) &localhost, sizeof localhost, host, sizeof host, service, sizeof service, 0);
 	if (rv != 0) perror ("Getnameinfo failed");
 	else cout << "host " << host << " service " << service << endl;
-
+*/
 	cout << "Server: Bind Complete\n";
 	return true;
 }

@@ -1,4 +1,5 @@
 /*
+ * IM-Ak2 1.0
  * server.h:	Header containing structure & function declarations
  *		for server
  * Anil Kag

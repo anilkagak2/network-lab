@@ -17,7 +17,7 @@ COBJ=client/obj/
 INC=include/message.h
 
 # Make all default
-all: im-serverD im-clientD ims imc
+all: im-serverD im-clientD ims imc ims-free-port
 
 # Server
 # compilation of backend + main
@@ -27,6 +27,14 @@ im-serverD: serverD.o smain.o
 # as per the assignment server should be named "ims"
 ims: server.o smain.o
 	g++ $(SOBJ)server.o $(SOBJ)smain.o -o $(SBIN)ims 
+
+# "ims-free-port" picks an available free port for the server
+ims-free-port: serverFP.o smain.o
+	g++ $(SOBJ)serverFP.o $(SOBJ)smain.o -o $(SBIN)ims-free-port -D_AUTO_PICK_PORT_
+
+# server backend for free port one
+serverFP.o: $(SSRC)server.cpp $(SSRC)server.h $(INC)
+	g++ -c $(SSRC)server.cpp -o $(SOBJ)serverFP.o -D_AUTO_PICK_PORT_
 
 # server backend
 serverD.o: $(SSRC)server.cpp $(SSRC)server.h $(INC)

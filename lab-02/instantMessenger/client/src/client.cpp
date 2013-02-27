@@ -1,4 +1,5 @@
 /*
+ * IM-Ak2 1.0
  * client.cpp:	Function definitions for client
  *
  * Anil Kag

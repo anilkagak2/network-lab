@@ -1,4 +1,5 @@
 /*
+ * IM-Ak2 1.0
  * client.h:	Header containing structure & function declarations
  *		for client
  * Anil Kag

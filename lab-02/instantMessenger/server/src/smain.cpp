@@ -1,4 +1,5 @@
 /*
+ * IM-Ak2 1.0
  * smain.cpp:	Main routine that uses the client class instance for im-server
  *
  * Anil Kag
