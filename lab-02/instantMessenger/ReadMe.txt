@@ -38,7 +38,7 @@ Source
 		`-- smain.cpp
 
 
-Test
+Steps to run the server & client
 	Port used by server is 5555 (make sure the port is free)
 	Open three terminals T1, T2, T3
 	@T1
@@ -56,6 +56,10 @@ Test
 	@T2
 		imc> rahul: hi.. what's up?
 		(rahul will get this message as forwarded by server)
+
+	Type the name strictly without any trailing spaces between name & ':'
+	If there are some trailing spaces, the server might not find the user in the 
+	registered users list & hence send back a not registered user message.
 
 
 Class Description
