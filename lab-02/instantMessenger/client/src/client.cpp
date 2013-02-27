@@ -13,6 +13,9 @@ Client::Client (char *cuser, char *chost, char *port) {
 	strncpy (user, cuser, NAME_MAX_LEN);
 	strncpy (host, chost, NAME_MAX_LEN);
 	
+	/* Initiiaze the signal handler. */
+//	set_sigaction ();
+
 	/* Initialize the socket. */
 	if ( (client_socket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1 ) {
 		perror ("Client: Create Socket ");
@@ -95,8 +98,27 @@ Client::Client (char *cuser, char *chost, char *port) {
 		cout << "Client: Registration NOT ACKNOWLEDGED by Server & TIMEOUT occurred" << endl;
 		exit (1);
 	} 
-	cout << "came to end.. DONT know about the server's registration ack" << endl;
+
+	// set registration flag
+	registered = true;
+//	cout << "came to end.. DONT know about the server's registration ack" << endl;
 }
+
+/*
+// CTRL+C Handler. De-registers the user
+void
+Client::sig_handler (int signum) {
+	stopFlag = 1;
+}
+
+// sets up the signal handling struct
+void
+Client::set_sigaction () {
+	struct sigaction sigAct;
+	memset(&sigAct, 0, sizeof(sigAct));
+	sigAct.sa_handler = sig_handler;
+	sigaction(SIGINT, &sigAct, 0);
+}*/
 
 /* Sends DEREGISTRATION message to server. */
 bool
@@ -118,16 +140,46 @@ Client::deregister () {
 		return false;
 	}
 
-	cout << "Client: De-registered " << user << "at " << host << endl;	
+	cout << "Client: De-registered " << user << "at " << host << endl;
+
+	// clear the registered flag
+	registered = false;
 	return true;
 }
 
 /* TODO:: Fit deregistration into this. */
 /* Deregisters the user. */
 Client::~Client () {
+	cout << "Freeing allocated resources" << endl;
+	if (registered) {
+		if (deregister ()) 	cout << "De-Registration Successful" << endl;
+		else 			cout << "De-Registration Failed" << endl;
+	}
+
 	// close the socket if it's valid
 	if (client_socket != -1) close (client_socket);
 }
+
+// trim from start
+inline string &
+Client::ltrim(string &s) {
+	s.erase (s.begin (), find_if (s.begin (), s.end (), not1 (ptr_fun<int, int> (isspace)) ) );
+	return s;
+}
+
+// trim from end
+inline string &
+Client::rtrim(string &s) {
+	s.erase(find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(), s.end());
+	return s;
+}
+
+// trim from both ends
+inline string &
+Client::trim(string &s) {
+	return ltrim(rtrim(s));
+}	
+
 
 /* Main Engine. */
 void
@@ -187,6 +239,14 @@ Client::start () {
 			 */
 			//			cout << line << endl;
 
+#ifdef _DEBUG_ 
+			cout << "line before trimming: " << line << endl;
+#endif
+			line = trim (line);
+#ifdef _DEBUG_
+			cout << "line after trimming: " << line << endl;
+#endif
+
 			// EXIT
 			if (!strncmp (line.c_str (), "exit", 4)) {
 				deregister ();
@@ -237,11 +297,13 @@ Client::send_message (string line) {
 	if (pos == string::npos) {
 		cerr << "No message embedded" << endl;
 		return;
-		//return false;
 	}
 
 	string to = line.substr (0, pos);
 	string payload = line.substr (pos+1);
+
+	// remove trailing spaces from the user name
+	to = rtrim (to);
 
 #ifdef _DEBUG_
 	cout << "TO: " << to << endl;

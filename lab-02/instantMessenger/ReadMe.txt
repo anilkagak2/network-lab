@@ -67,5 +67,26 @@ Class Description
 	server		backbone for the server
 
 Bugs
+ - 	When two users both with same name tries to register themselves on
+	server, the last one will be able to succeed.
 
-TODOs
+TODOs or Enhancements
+ -	Currently the server maintains the user registration table in 
+	the form of a list. It can be a problem when the table size 
+	grows aribitrarily large
+	Remedy: Use map instead of list. This will improve the search
+	period.
+
+ -DONE 	Trailing spaces before & after the user name in "imc>" prompt 
+	till the ':' can be a problem for now. Write check for it.
+
+
+ -* 	Right now only server IP (in dotted decimal notation) will work,
+	you can use "localhost" (it's an exception).
+	Remedy: Use getaddrinfo ()
+
+ -* 	Make sure the server is running before any user sends any message.
+	Remedy: TIMEOUT value for the REGISTRATION ACK (currently in use)
+
+ -*	Handling the CTRL+C signal in client because in this case de-register
+	is really required
