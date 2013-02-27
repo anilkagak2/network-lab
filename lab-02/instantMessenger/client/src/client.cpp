@@ -24,8 +24,10 @@ Client::Client (char *cuser, char *chost, char *port) {
 	}
 
 	// May be put in DEBUG #defines
+#ifdef _DEBUG_
 	cout << "Client: Welcome " << user << endl;
 	cout << "Client: Socket creation successful\n";
+#endif
 
 	/* Setup the server's address struct. */
 	// clear the struct
@@ -37,8 +39,10 @@ Client::Client (char *cuser, char *chost, char *port) {
 	inet_aton (host, &server.sin_addr);
 	server.sin_port = htons (atoi (port));
 
+#ifdef _DEBUG_
 	cout << "Client: Server address structure filled successully\n";
 	cout << "Client: server=" << host << " port=" << port << endl;
+#endif
 
 	/* Send Registration message to server. */
 	im_message msg;
@@ -64,13 +68,13 @@ Client::Client (char *cuser, char *chost, char *port) {
 
 	// Registration acknowledgement in response to 
 	// client's registration message
-	memset (&msg, 0, sizeof (msg));
+/*	memset (&msg, 0, sizeof (msg));
 	socklen_t len;
 
 	fd_set socks;
 	struct timeval t;
 
-	/* Create set of file descriptors stdin(0) & client_socket. */
+	// Create set of file descriptors stdin(0) & client_socket. 
 	// this CLR is really required.. no clue why though.. :P
 	FD_CLR(client_socket, &socks);
 	FD_ZERO(&socks);
@@ -99,7 +103,7 @@ Client::Client (char *cuser, char *chost, char *port) {
 		cout << "Client: Registration NOT ACKNOWLEDGED by Server & TIMEOUT occurred" << endl;
 		exit (1);
 	} 
-
+*/
 	// set registration flag
 	registered = true;
 //	cout << "came to end.. DONT know about the server's registration ack" << endl;
@@ -140,25 +144,27 @@ Client::deregister () {
 		perror ("Client: De-Registration Failed");
 		return false;
 	}
-
-	cout << "Client: De-registered " << user << "at " << host << endl;
-
+#ifdef _DEBUG_
+	cout << "Client: De-registered " << user << " at " << host << endl;
+#endif
 	// clear the registered flag
 	registered = false;
 	return true;
 }
 
-/* TODO:: Fit deregistration into this. */
 /* Deregisters the user. */
 Client::~Client () {
-	cout << "Freeing allocated resources" << endl;
 	if (registered) {
-		if (deregister ()) 	cout << "De-Registration Successful" << endl;
+		int rv = deregister ();
+#ifdef _DEBUG_
+		if (rv)		 	cout << "De-Registration Successful" << endl;
 		else 			cout << "De-Registration Failed" << endl;
+#endif
 	}
 
 	// close the socket if it's valid
 	if (client_socket != -1) close (client_socket);
+	cout << "Good Bye " << user << " :) "<< endl;
 }
 
 // trim from start
@@ -185,12 +191,17 @@ Client::trim(string &s) {
 /* Main Engine. */
 void
 Client::start () {
-	cout << "Client:: Start successful\n";
+#ifdef _DEBUG_
+	cout << "Client: Start successful\n";
 	cout.flush ();
+#endif
 
 	fd_set readfds;
 	int rval;
 
+	cout << "\tIM-Ak2 1.0 " << endl;
+	cout << "\tAuthor : Anil Kag " << endl;
+	cout << "\tWelcome " << user << " :) " << endl;
 	while (1) {
 		// display instant messenger prompt
 		//cout << "imc> " << endl;
@@ -208,8 +219,6 @@ Client::start () {
 		/* We don't need to timeout, so we leave that part NULL.   */
 		rval = select(client_socket+1, &readfds, NULL, NULL, NULL);
 
-		// TODO:: Handling the recvfrom in start function but need to shift
-		// it's functionality to some stand-alone function
 		if ((rval == 1) && (FD_ISSET(client_socket, &readfds))) {
 #ifdef _DEBUG_ 
 			cout << "Client: going to receive message" << endl;
@@ -220,9 +229,6 @@ Client::start () {
 
 		if ((rval == 1) && (FD_ISSET(0, &readfds))) {
 			/* We have input waiting on standard input, so we can go get it. */
-			//			send_message (); 
-			//			cerr << "Client: Cannot send message\n";
-
 #ifdef _DEBUG_ 
 			cout << "Client: going to send message" << endl;
 #endif
@@ -234,12 +240,6 @@ Client::start () {
 #endif
 
 			// HOUSE KEEPING THINGS
-			/*			int pos = 0;
-						pos = line.find_first_not_of (" \t");
-						if (pos != string::npos) line = line.substr (0, pos+1);
-			 */
-			//			cout << line << endl;
-
 #ifdef _DEBUG_ 
 			cout << "line before trimming: " << line << endl;
 #endif
@@ -258,8 +258,6 @@ Client::start () {
 				send_message (line); 
 			}
 		}
-
-		//		if (rval == -1 && errno == EINTR) continue;
 
 		if (rval == -1) {
 			perror ("Client: Select()");
@@ -296,7 +294,9 @@ void
 Client::send_message (string line) {
 	int pos = line.find_first_of (':');
 	if (pos == string::npos) {
+#ifdef _DEBUG_
 		cerr << "No message embedded" << endl;
+#endif
 		return;
 	}
 
@@ -326,7 +326,7 @@ Client::send_message (string line) {
 	if (sendto (client_socket, &msg, sizeof (msg), 0, (struct sockaddr *) &server,
 				sizeof (server)) != sizeof (msg)) {
 		cerr << "Client: Error sending message to " << msg.to << endl;
-		//	return false;
 		return;
 	}
 }
+

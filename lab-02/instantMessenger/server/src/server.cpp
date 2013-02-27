@@ -109,6 +109,7 @@ Server::start () {
 		}
 		
 		else {
+#ifdef _DEBUG_
 			char host[NI_MAXHOST], service[NI_MAXSERV];
 			int s = getnameinfo ((struct sockaddr *) &client, client_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV);
 
@@ -117,6 +118,7 @@ Server::start () {
 						len, host, service);
 			else 
 				fprintf (stderr, "getaddrnameinfo: %s\n", gai_strerror (s));
+#endif
 
 			// check the type of message received
 			if (msg.type == REGISTRATION_MESSAGE) {
@@ -140,7 +142,7 @@ Server::start () {
 			       		cerr << "to " << msg.to << endl;
 				} else {
 					cout << "Server:  message sent from " << msg.from;
-			       		cout << "to " << msg.to << endl;
+			       		cout << " to " << msg.to << endl;
 				}
 			 }
 		}
@@ -203,8 +205,15 @@ Server::deregister_user	(struct im_message *msg, struct sockaddr_in *client) {
 	for (it = users.begin (); it != users.end (); it++) { 
 		if (strncmp (it->user_name, msg->from, NAME_MAX_LEN) == 0) {
 			// removing the user from table
-			users.erase (it);
-			cout << "Server: DeRegistered " << msg->from << endl;
+			// check if the address also matches
+			struct sockaddr_in *s = &it->user_addr;
+			if ((s->sin_addr.s_addr == client->sin_addr.s_addr) &&
+			   (it->user_addr.sin_port == client->sin_port)){
+				users.erase (it);
+				cout << "Server: DeRegistered " << msg->from << endl;
+			}
+			else cout << "Server: de-registering a user with same name but not the same ip == Failed"
+				  << endl;
 			return true;
 		}
 	}
