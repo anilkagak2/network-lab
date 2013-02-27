@@ -63,19 +63,24 @@ Assumptions
 	- im client starts only after im server is up & running [see Bugs for "why?"]
 
 Steps to run the server & client
+	Before coming to this you should build your binaries for IM.
 	Port used by server is 5555 (make sure the port is free)
-	Open three terminals T1, T2, T3
+	Open three terminals T1, T2, T3 [Assuming $ is the prompt]
 	@T1
 		$ cd server/bin
 		$ ./ims	
-		wait till "Server successfully started" message comes
+		(Output will contain Messages as the server starts &
+		a final message "Server Started Successfully" tells that
+		the server is up & running [wait till this point before typing
+		anything on T2 or T3] )
 	@T2
 		$ cd client/bin
 		$ ./imc anil localhost 5555
-		imc> prompt will appear after invoking this command
+		(Output will contain welcome message for anil & the imc> prompt )
 	@T3
 		$ cd client/bin
 		$ ./imc rahul localhost 5555
+		(Output will contain welcome message for rahul & the imc> prompt )
 
 	@T2
 		imc> rahul: hi.. what's up?
