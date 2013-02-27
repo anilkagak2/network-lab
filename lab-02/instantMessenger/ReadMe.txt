@@ -10,6 +10,7 @@ Introduction
 	This is a general instant messenger which deals with text messages only.
 	Other data embedding like pictures, files etc. are not available in this
 	version of IM-Ak2.
+	This program has been tested on Linux 3.2.0-38.
 
 Building
 	First of all change directory to the place where you extracted the source code
