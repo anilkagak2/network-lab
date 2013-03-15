@@ -1,0 +1,26 @@
+1) Protocols which appear in the protocol column in the unfiltered packet-listing
+ARP
+DHCiPv6
+DNS
+Ethernet *
+ICMP
+HTTP
+LLC *
+LLMNR
+SSDP
+STP *
+TCP
+UDP
+
+2)
+ no	time		source		destination	proto	len	info	
+"310","17:00:18.753711","172.16.27.59","202.141.80.22","HTTP","867","GET http://www.google.co.in/ HTTP/1.1 "
+"391","17:00:18.903545","202.141.80.22","172.16.27.59","HTTP","66","HTTP/1.0 200 OK  (text/html)"
+
+time taken = 0.903545-.753711 sec = 0.149834 sec
+
+3) 
+IP of google cannot be determined by looking at the above two packets because the proxy server(202.141.80.22) handles
+the connection part between my host & google.com
+
+host ip --> 172.16.27.59

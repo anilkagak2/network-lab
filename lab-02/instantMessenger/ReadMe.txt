@@ -14,6 +14,7 @@ Introduction
 
 Building
 	First of all change directory to the place where you extracted the source code
+	$ cd IM
 	$ make clean
 	$ make
 
