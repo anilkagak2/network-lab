@@ -1,0 +1,48 @@
+traceroute jampui.iitg.ernet.in 56
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 56 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.304 ms  0.355 ms  0.410 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.189 ms !X  0.190 ms !X  0.183 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 56 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.781 ms  0.868 ms  0.920 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.172 ms !X  0.171 ms !X  0.163 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 56 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.344 ms  0.405 ms  0.453 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.187 ms !X  0.186 ms !X  0.180 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 56 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.285 ms  0.394 ms  0.389 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.209 ms !X  0.214 ms !X  0.209 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 56 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.294 ms  0.347 ms  0.659 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.183 ms !X  0.182 ms !X  0.174 ms !X
+traceroute jampui.iitg.ernet.in 2000
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 2000 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.824 ms  0.902 ms  0.989 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.557 ms !X  0.555 ms !X  0.547 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 2000 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.805 ms  0.870 ms  0.932 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.447 ms !X  0.443 ms !X  0.435 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 2000 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.869 ms  0.939 ms  1.029 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.517 ms !X  0.519 ms !X  0.511 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 2000 byte packets
+ 1  172.16.24.254 (172.16.24.254)  0.822 ms  0.895 ms  0.959 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.504 ms !X  0.508 ms !X  0.501 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 2000 byte packets
+ 1  172.16.24.254 (172.16.24.254)  1.045 ms  1.089 ms  1.157 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.502 ms !X  0.504 ms !X  0.497 ms !X
+traceroute jampui.iitg.ernet.in 3200
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 3200 byte packets
+ 1  172.16.24.254 (172.16.24.254)  1.168 ms  1.184 ms  1.262 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.534 ms !X  0.533 ms !X  0.523 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 3200 byte packets
+ 1  172.16.24.254 (172.16.24.254)  1.149 ms  1.215 ms  1.294 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.485 ms !X  0.482 ms !X  0.600 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 3200 byte packets
+ 1  172.16.24.254 (172.16.24.254)  1.243 ms  1.279 ms  1.346 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.468 ms !X  0.465 ms !X  0.568 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 3200 byte packets
+ 1  172.16.24.254 (172.16.24.254)  1.305 ms  1.364 ms  1.450 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.492 ms !X  0.493 ms !X  0.483 ms !X
+traceroute to jampui.iitg.ernet.in (202.141.80.21), 30 hops max, 3200 byte packets
+ 1  172.16.24.254 (172.16.24.254)  1.189 ms  1.240 ms  1.321 ms
+ 2  jampui.iitg.ernet.in (202.141.80.21)  0.525 ms !X  0.525 ms !X  0.516 ms !X

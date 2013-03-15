@@ -1,0 +1,23 @@
+1)
+source port
+destination port
+length
+checksum
+
+2) Each Field is 4bytes(16 bits) long
+
+3) Select the DNS query portion & it expands over 46bytes which is equal to the length given in the UDP packet
+==> length in UDP packet refers to the actual data length
+
+4) Protocol Number =  17(decimal), 0x11(hexadecimal)
+
+5)
+Request		"39","23:43:44.573062","172.16.27.59","202.141.80.9","DNS","80","Yes","Standard query A jampui.iitg.ernet.in"
+		Internet Protocol Version 4, Src: 172.16.27.59 (172.16.27.59), Dst: 202.141.80.9 (202.141.80.9)
+		User Datagram Protocol, Src Port: 56060 (56060), Dst Port: domain (53)		
+
+Response	"42","23:43:44.573688","202.141.80.9","172.16.27.59","DNS","171","Yes","Standard query response A 202.141.80.21"
+		Internet Protocol Version 4, Src: 202.141.80.9 (202.141.80.9), Dst: 172.16.27.59 (172.16.27.59)
+		User Datagram Protocol, Src Port: domain (53), Dst Port: 56060 (56060)
+
+Source port in one becomes the destination in other & vice-versa

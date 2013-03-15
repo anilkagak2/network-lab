@@ -1,0 +1,41 @@
+1)
+Internet Protocol Version 4, Src: 172.16.27.59 (172.16.27.59), Dst: 202.141.80.21 (202.141.80.21)
+IP my computer = 172.16.27.59
+
+2)
+Protocol: UDP (17)
+
+3)
+Internet Header Length = 20bytes
+(if only looking at packet, value given in IHLen is 5 ==> 5*32 bits = 5*4bytes = 20 bytes)
+
+** Is it correct?
+Total Length = 56bytes = Header Length + IP Payload Length 
+==> IP Payload Length = 56bytes - 20bytes = 36bytes
+(as Header length = 20bytes)
+
+4)
+Flags: 0x00
+0... .... = Reserved bit: Not set
+.0.. .... = Don't fragment: Not set
+..0. .... = More fragments: Not set	
+Fragment offset: 0
+Since fragment offset is 0 & no more fragments are going to come
+==> no fragmentation
+
+5)
+Identification & Checksum always change while going from one packet to other
+** Will TTL come here
+For each three packet TTL will be fixed & after that it'll be incremented by 1
+
+6)
+const fields --> Version, Header Length(?), Protocol = UDP, Src & Dest IP 
+field may change --> TTL, More Fragments, Total Length, Fragment Offset
+which fields must change & why?
+
+** More robust answer
+
+7)
+identification & TTL values do not remain same 
+** why?
+
