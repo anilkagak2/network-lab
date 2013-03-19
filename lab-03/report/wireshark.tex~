@@ -1,0 +1,253 @@
+\documentclass[a4,11pt]{article}
+\topmargin = 2pt
+\textwidth = 450pt
+\textheight = 640pt
+\marginparwidth = 90pt
+\evensidemargin = 54pt
+
+\usepackage{xcolor}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage[showframe=false]{geometry}
+\usepackage{changepage}
+
+\usepackage{listings}
+\lstdefinestyle{Bash}
+{language=bash,
+keywordstyle=\color{blue},
+basicstyle=\ttfamily,
+morekeywords={peter@kbpet},
+alsoletter={:~\$},
+morekeywords=[2]{ak2@ak2-XPS-L501X:},
+keywordstyle=[2]{\color{red}},
+literate={\$}{{\textcolor{red}{\$}}}1 
+         {:}{{\textcolor{red}{:}}}1
+         {~}{{\textcolor{red}{\textasciitilde}}}1,
+}
+
+\begin{document}
+
+\title{CS342 \\
+	Report\\
+	Assignment 3: Wireshark}
+\author{Anil Kag\\
+	   10010111\\
+	   a.kag@iitg.ernet.in}
+\date{March 20, 2013}
+\maketitle
+
+\section{Part 1\\
+	  Basics}
+\begin{enumerate}
+ %prb 1%
+ \item Protocols which appear in the protocol column in the unfiltered packet-listing
+    \begin{multicols}{3}
+      \begin{enumerate}
+      \item ARP  	\item DHCiPv6
+      \item DNS 	\item Ethernet 
+      \item ICMP      	\item HTTP
+      \item LLC        \item LLMNR
+      \item SSDP       \item STP 
+      \item TCP       	\item UDP
+      \end{enumerate}
+    \end{multicols}
+    
+    %prb 2%
+    \item  Packet short details are as follows \\
+      \begin{adjustwidth}{-2cm}{}
+      \begin{tabular}{|r|l|l|l|l|l| p{4cm} |}
+       \hline
+       no&	time&			source&			destination&		proto&	len&	info \\
+       \hline
+       310& 	17:00:18.753711& 	172.16.27.59& 		202.141.80.22& 		HTTP& 	867& 	GET http://www.google.co.in/ HTTP/1.1 \\
+       391& 	17:00:18.903545&	202.141.80.22&		172.16.27.59&		HTTP&	66&	HTTP/1.0 200 OK  (text/html)\\
+       \hline
+      \end{tabular}
+      \end{adjustwidth}
+
+      Time taken = 0.903545-.753711 sec = 0.149834 sec
+
+      %prb 3%
+      \item IP of google cannot be determined by looking at the above two packets because the proxy server(202.141.80.22) handles
+	      the connection part between my host \& google.com \\
+
+	    Host ip $\Rightarrow$ 172.16.27.59
+\end{enumerate}
+	  
+\section{Part 2\\
+	  Ethernet}
+	 
+    \textit{Reference packets used for solving this part}\\
+      \begin{adjustwidth}{-2cm}{}
+      \begin{tabular}{|r|l|l|l|l|l| p{4cm} |}
+       \hline
+       no&	time&			source&			destination&		proto&	len&	info \\
+       \hline
+       113& 	17:47:02.684944& 	172.16.27.59& 		202.141.80.22& 		HTTP& 	668& 	GET http://www.faqs.org/rfcs/rfc826.html HTTP/1.1 \\
+       391& 	17:47:03.771542&	202.141.80.22&		172.16.27.59&		HTTP&	3935&	HTTP/1.0 200 OK  (text/html)\\
+       \hline
+      \end{tabular}
+      \end{adjustwidth}
+	  
+\begin{enumerate}
+  %prb 1%
+  \item HTTP GET message's ethernet header \\
+      Ethernet II, Src: Pegatron\_b3:05:c4 (38:60:77:b3:05:c4), Dst: Cisco\_9d:70:00 (00:24:f9:9d:70:00) \\
+
+      Ethernet address of your computer	38:60:77:b3:05:c4	\\
+
+   %prb 2%
+  \item Destination Ethernet address 		00:24:f9:9d:70:00	\\
+
+  It's not the ethernet address of the RFC website. \\
+  It's actually the ethernet address of the next hop for reaching the destination in my computer's routing table. \\
+
+  You can actually check the IP for the device having destination ethernet address as this by 
+  running 'arp -n' on your linux machine \& check the IP corresponding to this ethernet address on my machine.
+
+  \begin{adjustwidth}{-2cm}{}
+  \begin{lstlisting}[style=bash]
+    $ arp -n
+    Address     	HWtype  HWaddress           Flags Mask   Iface
+    172.16.27.68       ether   f0:4d:a2:4f:15:6d   C            eth0
+    172.16.24.254      ether   00:24:f9:9d:70:00   C            eth0
+  \end{lstlisting}
+  \end{adjustwidth}
+  
+  $\Rightarrow$ it's ethernet address of 172.16.24.254
+
+  %*** incomplete prb3%
+  \textit{Incomplete}
+  \item Type field value = 0x0800 $\Rightarrow$ IP packet
+	** What about the flags?
+
+  %*** prb 4 incomplete%
+  \item Ethernet Header Contents
+  \textit{Incomplete}
+  \begin{adjustwidth}{-2cm}{}
+  \begin{lstlisting}[style=bash]
+    0000  00 24 f9 9d 70 00 38 60  77 b3 05 c4 08 00 45 00   .$..p.8` w.....E.
+    0010  02 8e 56 bd 40 00 40 06  ff bd ac 10 1b 3b ca 8d   ..V.@.@. .....;..
+    0020  50 16 c9 6a 0c 38 94 40  d2 f1 66 42 57 69 80 18   P..j.8.@ ..fBWi..
+    0030  00 e5 28 7f 00 00 01 01  08 0a 00 9e 84 4b 15 b1   ..(..... .....K..
+    0040  50 ee 47 45 54 20 68 74  74 70 3a 2f 2f 77 77 77   P.GET ht tp://www
+  \end{lstlisting}
+  \end{adjustwidth}
+  
+  ASCII letter 'G' starts on line 5 with base $0x0040$ \& offset $0x0003$ \\
+  $\Rightarrow$ position (in bytes) from the start of Ethernet Frame $= 4*16+3 = 67$ ($0x0010 = 16$ in decimal)
+
+  %prb 5%
+  \item HTTP Response \\
+  Ethernet II, Src: Cisco\_9d:70:00 (00:24:f9:9d:70:00), Dst: Pegatron\_b3:05:c4 (38:60:77:b3:05:c4) \\
+  src = 00:24:f9:9d:70:00 $\Rightarrow$ hop just before my computer in the path from website to my computer \\
+
+  %prb 6%
+  \item dst = 38:60:77:b3:05:c4 $\Rightarrow$ my computer (you can verify via ifconfig \& look at the hwaddress for the eth0 interface)
+
+  \begin{adjustwidth}{-2cm}{}
+  \begin{lstlisting}[style=bash]
+    $ ifconfig
+    eth0      Link encap:Ethernet  HWaddr 38:60:77:b3:05:c4  
+	      inet addr:172.16.27.59  Bcast:172.16.27.255  Mask:255.255.252.0
+	      inet6 addr: fe80::3a60:77ff:feb3:5c4/64 Scope:Link
+	      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+	      RX packets:8008125 errors:0 dropped:4342 overruns:0 frame:0
+	      TX packets:173669 errors:0 dropped:0 overruns:0 carrier:0
+	      collisions:0 txqueuelen:1000 
+	      RX bytes:1129843477 (1.1 GB)  TX bytes:20988447 (20.9 MB)
+	      Interrupt:43 Base address:0xe000 
+
+    lo        Link encap:Local Loopback  
+	      inet addr:127.0.0.1  Mask:255.0.0.0
+	      inet6 addr: ::1/128 Scope:Host
+	      UP LOOPBACK RUNNING  MTU:16436  Metric:1
+	      RX packets:21789 errors:0 dropped:0 overruns:0 frame:0
+	      TX packets:21789 errors:0 dropped:0 overruns:0 carrier:0
+	      collisions:0 txqueuelen:0 
+	      RX bytes:1986523 (1.9 MB)  TX bytes:1986523 (1.9 MB)
+  \end{lstlisting}
+  \end{adjustwidth}
+
+  %*** prb 7 incomplete%
+  \textit{Incomplete}
+  \item Type field == 0x0800 $\Rightarrow$ IP \\
+    ** what about flags?
+
+\end{enumerate}
+
+	  
+\section{Part 3\\
+	  IP}
+
+  \begin{enumerate}
+   \item Internet Protocol Version 4, Src: 172.16.27.59 (172.16.27.59), Dst: 202.141.80.21 (202.141.80.21) \\
+	 IP my computer = 172.16.27.59
+
+    \item Protocol: UDP (17)
+
+    \item Internet Header Length = 20bytes \\
+    (if only looking at packet, value given in IHLen is 5 $\Rightarrow 5*32$ bits = $5*4$bytes = 20 bytes) \\
+
+    ** Is it correct? \\
+    Total Length = 56bytes = Header Length + IP Payload Length \\
+    $\Rightarrow$ IP Payload Length = 56bytes - 20bytes = 36bytes \\
+    (as Header length = 20bytes)
+
+    \item Flags: 0x00 \\
+      0... .... = Reserved bit:   Not set \\
+      .0.. .... = Don't fragment: Not set \\
+      ..0. .... = More fragments: Not set \\
+  Fragment offset: 0 \\
+  Since fragment offset is 0 \& no more fragments are going to come \\
+  $Rightarrow$ no fragmentation
+
+  \item Identification \& Checksum always change while going from one packet to other \\
+   ** Will TTL come here \\
+  For each three packet TTL will be fixed \& after that it'll be incremented by 1
+
+  \item const fields $\Rightarrow$ Version, Header Length(?), Protocol = UDP, Src \& Dest IP \\
+	field may change $Rightarrow$ TTL, More Fragments, Total Length, Fragment Offset \\
+	Which fields must change \& why? \\
+
+    ** More robust answer
+
+  \item Identification \& TTL values do not remain same\\
+    ** why?
+
+  \end{enumerate}
+	  
+\section{Part 4\\
+	  UDP}
+  \begin{enumerate}
+   \item 
+   %\begin{multicols}{2}
+    \begin{enumerate}
+      \item source port
+      \item destination port
+      \item length
+      \item checksum
+    \end{enumerate}
+  %\end{multicols}
+
+  \item Each Field is 4bytes(16 bits) long
+
+  \item Select the DNS query portion \& it expands over 46bytes which is equal to the length given in the UDP packet \\
+      $\Rightarrow$ length in UDP packet refers to the actual data length
+
+  \item Protocol Number =  17(decimal), 0x11(hexadecimal)
+
+  \item 
+  Request		"39","23:43:44.573062","172.16.27.59","202.141.80.9","DNS","80","Yes","Standard query A jampui.iitg.ernet.in" \\
+		  Internet Protocol Version 4, Src: 172.16.27.59 (172.16.27.59), Dst: 202.141.80.9 (202.141.80.9) \\
+		  User Datagram Protocol, Src Port: 56060 (56060), Dst Port: domain (53)		\\
+
+  Response	"42","23:43:44.573688","202.141.80.9","172.16.27.59","DNS","171","Yes","Standard query response A 202.141.80.21" \\
+		  Internet Protocol Version 4, Src: 202.141.80.9 (202.141.80.9), Dst: 172.16.27.59 (172.16.27.59) \\
+		  User Datagram Protocol, Src Port: domain (53), Dst Port: 56060 (56060) \\
+
+  Source port in one becomes the destination in other \& vice-versa
+  \end{enumerate}
+
+	  
+\end{document}
