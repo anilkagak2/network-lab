@@ -34,7 +34,7 @@ literate={\$}{{\textcolor{red}{\$}}}1
 \setlist[description]{style=nextline}
 
 \newenvironment{que}
-{ \color{YellowGreen}
+{ \color{PineGreen}
   \begin{question}
 }
 { \end{question} }
@@ -48,7 +48,7 @@ literate={\$}{{\textcolor{red}{\$}}}1
 
 \begin{document}
 
-\title{CS349 \\
+\title{CS349 : Networks Lab \\
 	Report\\
 	Assignment 3: Wireshark}
 \author{Anil Kag\\
